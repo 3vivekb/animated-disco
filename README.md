@@ -1,5 +1,5 @@
 # animated-disco
-A flask - postgres - docker data ingestion api project
+A Flask - Docker/Postgres data ingestion api project
 
 Start postgres docker:
 
@@ -12,3 +12,13 @@ Run the following commands to create the initial db
 ```su postgres```
 
 ```psql -c 'create database wxdata;'```
+
+Create conda environment (or venv as you desire)
+
+```conda create --name flask_postgres --file requirements.txt -c conda-forge flask-smorest```
+
+```conda activate flask_postgres```
+
+Run data ingestion with 
+
+```python ingestion.py```
