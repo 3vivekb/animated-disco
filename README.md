@@ -9,7 +9,7 @@ Start postgres docker:
 
 Create miniconda environment:
 
-```conda create --name flask_postgres --file requirements.txt -c conda-forge flask-smorest==0.42.1```
+```conda create --name flask_postgres --file requirements.txt```
 
 ```conda activate flask_postgres```
 
