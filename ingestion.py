@@ -6,6 +6,7 @@ import time
 import pandas as pd
 from sqlalchemy import create_engine
 
+from utils import get_conn
 
 def psql_insert_copy(table, conn, keys, data_iter):
     """
@@ -41,10 +42,9 @@ def psql_insert_copy(table, conn, keys, data_iter):
         cur.copy_expert(sql=sql, file=s_buf)
 
 
-engine = create_engine('postgresql://postgres:password@0.0.0.0:5432/wxdata')
+engine = get_conn()
 
 start = time.time()
-
 
 allFiles = glob.glob('.' + "/wx_data/USC*.txt")
 frames = []
