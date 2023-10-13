@@ -31,6 +31,9 @@ Here is a sample query:
 ```http://127.0.0.1:5000/api/weather?station=USC00257715&page_size=10&page=3```
 
 
+API Spec (WIP)
+http://127.0.0.1:5000/spec
+
 ## Design/Reasoning:
 
 The database and data processing etl were deliberately separated from the api front end.  This increases code simplicity and division of responsibility.

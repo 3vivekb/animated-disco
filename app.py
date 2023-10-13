@@ -49,12 +49,12 @@ def default():
     """
     return "<p>Hello!</p>"
 
-@app.route("/api/spec")
+@app.route("/spec")
 def spec():
     swag = swagger(app)
     swag['info']['version'] = "0.8"
-    swag['info']['title'] = "ux_data api"
-    return jsonify(swagger(app))
+    swag['info']['title'] = "Weather Data Api"
+    return jsonify(swag)
 
 @app.route('/api/weather', methods=['GET'])
 def get_weather_data():
