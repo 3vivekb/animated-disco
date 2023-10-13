@@ -1,6 +1,14 @@
+"""Weather data server
+
+This simple flask api helps users to make queries against a rest api to hit the processed and unprocessed weather data.
+
+Authored by Vivek Bansal
+"""
+
 import json
 
-from flask import Flask, request
+from flask import Flask, jsonify, request
+from flask_swagger import swagger
 import pandas as pd
 import psycopg2
 
@@ -36,11 +44,29 @@ def weather_clause_query(date_clause, station_clause, args, stats_table=False):
 
 @app.route('/')
 def default():
+    """
+    Returns: Hello World
+    """
     return "<p>Hello!</p>"
+
+@app.route("/api/spec")
+def spec():
+    swag = swagger(app)
+    swag['info']['version'] = "0.8"
+    swag['info']['title'] = "ux_data api"
+    return jsonify(swagger(app))
 
 @app.route('/api/weather', methods=['GET'])
 def get_weather_data():
     """
+    Returns weather data
+    ---
+    parameters:
+          - page_size: int
+            page: int
+            from_date: 'YYYY-MM-DD'
+            to_date: 'YYYY-MM-DD'
+            station: string
     Returns: JSON object
     """
     args = request.args
@@ -79,8 +105,16 @@ def get_weather_data():
 @app.route('/api/weather/stats', methods=['GET'])
 def get_weather_stats():
     """
+    Returns weather stats data
+    ---
+    parameters:
+          - page_size: int
+            page: int
+            from_date: 'YYYY'
+            to_date: 'YYYY'
+            station: string
     Returns: JSON object
-    """
+    """    
     args = request.args
     date_clause, station_clause = False, False
 

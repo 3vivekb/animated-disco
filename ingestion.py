@@ -1,3 +1,9 @@
+"""Weather data ingester
+
+This script allows the user to process wx weatehr data, do a little cleanup, then push to a postgres docker container.
+
+Authored by Vivek Bansal
+"""
 import csv
 import glob
 from io import StringIO
