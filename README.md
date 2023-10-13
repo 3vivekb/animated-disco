@@ -43,3 +43,16 @@ But for this current set up, with data only growing by 100x or less,  i'd probab
 and modify the pandas etl to handle the situation in memory if necessary.  Then add gunicorn and nginx. 
 Perhaps properly use docker-compose. There are lots of [guides](https://testdriven.io/blog/deploying-django-to-ec2-with-docker-and-gitlab/) for this stack!
 Simplicity is usually better, it creates less overhead and less code complexity.
+
+## Look/Feel
+
+Seeing between 20-50 seconds for ingestion and processing:
+![image](https://github.com/3vivekb/animated-disco/assets/4524205/bafdad8f-ce5f-4702-b558-39b6e7c44721)
+
+<img width="679" alt="image" src="https://github.com/3vivekb/animated-disco/assets/4524205/62813a20-e949-4217-9440-2a679a95c0cc">
+
+
+
+
+
+
