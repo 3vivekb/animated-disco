@@ -1,12 +1,21 @@
 import csv
 import glob
 from io import StringIO
+import logging
+from logging.handlers import RotatingFileHandler
 import time
 
 import pandas as pd
-from sqlalchemy import create_engine
+# from sqlalchemy import create_engine
 
 from utils import get_conn
+
+logger = logging.getLogger('ingestion')
+logging.basicConfig(
+        handlers=[RotatingFileHandler('./ingestion.log', maxBytes=10000000, backupCount=10)],
+        level=logging.DEBUG,
+        format="[%(asctime)s] %(levelname)s [%(name)s.%(funcName)s:%(lineno)d] %(message)s",
+        datefmt='%Y-%m-%dT%H:%M:%S')
 
 def psql_insert_copy(table, conn, keys, data_iter):
     """
@@ -46,6 +55,7 @@ def read_in_tsvs():
     allFiles = glob.glob('.' + "/wx_data/USC*.txt")
     frames = []
     for file_ in allFiles:
+        logging.debug(f"Reading in {file_}")
         frame = pd.read_csv(file_, header=None, sep='\t', na_values='-9999')
         frame['station'] = file_.split('/')[2].split('.')[0] #Get the weather station name
         frames.append(frame)
@@ -70,12 +80,16 @@ def process_stats_df(df):
 
 start = time.time()
 
+logging.info("Read in tsvs")
 df = read_in_tsvs()
+
+logging.info("Process stats df")
 stats_df = process_stats_df(df)
 del df['year']
 
 engine = get_conn()
 
+logging.info("Upload/replace stats df")
 stats_df.to_sql(
     name="weather_stats",
     con=engine,
@@ -85,6 +99,7 @@ stats_df.to_sql(
 )
 
 # TODO Create optmized tables in postgres.  These are not indexed.
+logging.info("Upload/replace weather df")
 df.to_sql(
     name="weather_data",
     con=engine,
@@ -93,4 +108,4 @@ df.to_sql(
     method=psql_insert_copy
 )
 end = time.time()
-print(end - start)
+logging.info(f"Ingestion processing time: {end - start}")
