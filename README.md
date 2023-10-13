@@ -27,4 +27,7 @@ Run Flask with
 
 ```flask --app app run```
 
-And you should be able to run queries to http://127.0.0.1:5000/api/weather
+You can run queries at:
+- http://127.0.0.1:5000/api/weather
+- http://127.0.0.1:5000/api/weather/stats
+
