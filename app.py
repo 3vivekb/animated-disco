@@ -56,10 +56,10 @@ def get_weather_data():
     
     limit_size = 1000
     if args.get('page_size'):
-        limit_size = args.get('page_size')
+        limit_size = int(args.get('page_size'))
     page = 0
     if args.get('page'):
-        page = args.get('page')
+        page = int(args.get('page'))
 
     engine = get_conn()
     dbConnection    = engine.connect()
@@ -93,10 +93,10 @@ def get_weather_stats():
     where_clause = weather_clause_query(date_clause, station_clause, args, stats_table=True)
     limit_size = 1000
     if args.get('page_size'):
-        limit_size = args.get('page_size')
+        limit_size = int(args.get('page_size'))
     page = 0
     if args.get('page'):
-        page = args.get('page')
+        page = int(args.get('page'))
 
     engine = get_conn()
     dbConnection    = engine.connect()

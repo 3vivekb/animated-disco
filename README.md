@@ -13,7 +13,7 @@ Run the following commands to create the initial db
 
 ```psql -c 'create database wxdata;'```
 
-Create conda environment (or venv as you desire)
+Create miniconda environment:
 
 ```conda create --name flask_postgres --file requirements.txt -c conda-forge flask-smorest==0.42.1```
 
@@ -31,3 +31,7 @@ You can run queries at:
 - http://127.0.0.1:5000/api/weather
 - http://127.0.0.1:5000/api/weather/stats
 
+
+Here is a sample query:
+
+```http://127.0.0.1:5000/api/weather?station=USC00257715&page_size=10&page=3```
