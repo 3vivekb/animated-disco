@@ -41,30 +41,40 @@ def psql_insert_copy(table, conn, keys, data_iter):
             table_name, columns)
         cur.copy_expert(sql=sql, file=s_buf)
 
+def read_in_tsvs():
 
-engine = get_conn()
+    allFiles = glob.glob('.' + "/wx_data/USC*.txt")
+    frames = []
+    for file_ in allFiles:
+        frame = pd.read_csv(file_, header=None, sep='\t', na_values='-9999')
+        frame['station'] = file_.split('/')[2].split('.')[0] #Get the weather station name
+        frames.append(frame)
+    df = pd.concat(frames).drop_duplicates(ignore_index=True)
+    df = df.rename(columns={0: 'wx_date',1: 'max_temp',2:'min_temp', 3:'precip'}).assign(
+        wx_date=lambda x: pd.to_datetime(x['wx_date'], format='%Y%m%d'))
+    df['year'] = df.wx_date.dt.year
+    return df
+
+def process_stats_df(df):
+
+    precip_df = df.groupby(['station','year'])['precip'].sum().reset_index()
+    max_df = df.groupby(['station','year'])['max_temp'].mean().reset_index()
+    max_df['max_temp'] = max_df['max_temp'].round()*.1
+
+    min_df = df.groupby(['station','year'])['min_temp'].mean().reset_index()
+    min_df['min_temp'] = min_df['min_temp'].round()*.1
+
+    stats_df = pd.merge(pd.merge(max_df,min_df,how='outer'),precip_df,how='outer')
+    stats_df = stats_df.rename(columns={'max_temp':'yearly_max_temp_avg','min_temp': 'yearly_min_temp_avg','precip':'yearly_precip_total'})
+    return stats_df
 
 start = time.time()
 
-allFiles = glob.glob('.' + "/wx_data/USC*.txt")
-frames = []
-for file_ in allFiles:
-    frame = pd.read_csv(file_, header=None, sep='\t', na_values='-9999')
-    frame['station'] = file_.split('/')[2].split('.')[0] #Get the weather station name
-    frames.append(frame)
-df = pd.concat(frames).drop_duplicates(ignore_index=True)
-df = df.rename(columns={0: 'wx_date',1: 'max_temp',2:'min_temp', 3:'precip'}).assign(
-    wx_date=lambda x: pd.to_datetime(x['wx_date'], format='%Y%m%d'))
-df['year'] = df.wx_date.dt.year
+df = read_in_tsvs()
+stats_df = process_stats_df(df)
+del df['year']
 
-precip_df = df.groupby(['station','year'])['precip'].sum().reset_index()
-max_df = df.groupby(['station','year'])['max_temp'].mean().reset_index()
-max_df['max_temp'] = max_df['max_temp'].round()*.1
-
-min_df = df.groupby(['station','year'])['min_temp'].mean().reset_index()
-min_df['min_temp'] = min_df['min_temp'].round()*.1
-
-stats_df = pd.merge(pd.merge(max_df,min_df,how='outer'),precip_df,how='outer')
+engine = get_conn()
 
 stats_df.to_sql(
     name="weather_stats",
@@ -74,8 +84,7 @@ stats_df.to_sql(
     method=psql_insert_copy
 )
 
-del df['year']
-
+# TODO Create optmized tables in postgres.  These are not indexed.
 df.to_sql(
     name="weather_data",
     con=engine,
