@@ -15,10 +15,16 @@ Run the following commands to create the initial db
 
 Create conda environment (or venv as you desire)
 
-```conda create --name flask_postgres --file requirements.txt -c conda-forge flask-smorest```
+```conda create --name flask_postgres --file requirements.txt -c conda-forge flask-smorest==0.42.1```
 
 ```conda activate flask_postgres```
 
 Run data ingestion with 
 
 ```python ingestion.py```
+
+Run Flask with
+
+```flask --app app run```
+
+And you should be able to run queries to http://127.0.0.1:5000/api/weather
