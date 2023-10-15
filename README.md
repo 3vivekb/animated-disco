@@ -1,7 +1,7 @@
 # animated-disco
 A Flask - Docker/Postgres data ingestion api project
 
-![image](https://github.com/3vivekb/animated-disco/assets/4524205/ba3e585c-a85e-482c-9381-c639c439934d)
+![image](https://media.tenor.com/vYDIILX_KJ4AAAAC/chubbisaur-chubbiverse.gif))
 
 
 ## SETUP
