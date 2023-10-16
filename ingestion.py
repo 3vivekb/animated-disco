@@ -1,4 +1,5 @@
-"""Weather data ingester
+"""
+Weather data ingester
 
 This script allows the user to process wx weatehr data, do a little cleanup, then push to a postgres docker container.
 
@@ -12,7 +13,6 @@ from logging.handlers import RotatingFileHandler
 import time
 
 import pandas as pd
-# from sqlalchemy import create_engine
 
 from utils import get_conn
 
@@ -74,11 +74,15 @@ def read_in_tsvs():
 def process_stats_df(df):
 
     precip_df = df.groupby(['station','year'])['precip'].sum().reset_index()
-    max_df = df.groupby(['station','year'])['max_temp'].mean().reset_index()
-    max_df['max_temp'] = max_df['max_temp'].round()*.1
 
+    precip_df['precip'] = precip_df['precip']*.01 #Convert to centimeters of rain (from tenths of a millimeter), 
+                                                  #not sure about sig figs
+
+    max_df = df.groupby(['station','year'])['max_temp'].mean().reset_index()
+    max_df['max_temp'] = max_df['max_temp'].round()*.1 #Convert to degrees Celcius (from tenths fo a degree Celcius),
+                                                       #not sure about sig figs
     min_df = df.groupby(['station','year'])['min_temp'].mean().reset_index()
-    min_df['min_temp'] = min_df['min_temp'].round()*.1
+    min_df['min_temp'] = min_df['min_temp'].round()*.1 #Convert to degrees Celcius, not sure about sig figs
 
     stats_df = pd.merge(pd.merge(max_df,min_df,how='outer'),precip_df,how='outer')
     stats_df = stats_df.rename(columns={'max_temp':'yearly_max_temp_avg','min_temp': 'yearly_min_temp_avg','precip':'yearly_precip_total'})
