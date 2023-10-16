@@ -1,4 +1,5 @@
-"""Weather data server
+"""
+Weather data server
 
 This simple flask api helps users to make queries against a rest api to hit the processed and unprocessed weather data.
 
@@ -7,10 +8,8 @@ Authored by Vivek Bansal
 
 import json
 
-from flask import Flask, jsonify, request
-from flask_swagger import swagger
+from flask import Flask, request
 import pandas as pd
-import psycopg2
 
 from utils import get_conn
 
@@ -24,7 +23,6 @@ def weather_clause_query(date_clause, station_clause, args, stats_table=False):
         date_col_name = "year"
     else:
         date_col_name = "wx_date"
-
 
     if date_clause and station_clause:
         where_clause = f"""WHERE {date_col_name} BETWEEN '{args.get('from_date')}' AND '{args.get('to_date')}'
@@ -48,13 +46,6 @@ def default():
     Returns: Hello World
     """
     return "<p>Hello!</p>"
-
-@app.route("/spec")
-def spec():
-    swag = swagger(app)
-    swag['info']['version'] = "0.8"
-    swag['info']['title'] = "Weather Data Api"
-    return jsonify(swag)
 
 @app.route('/api/weather', methods=['GET'])
 def get_weather_data():
