@@ -9,11 +9,13 @@ Authored by Vivek Bansal
 import json
 
 from flask import Flask, request
+from flask_cors import CORS
 import pandas as pd
 
 from utils import get_conn
 
 app = Flask(__name__)
+CORS(app)
 
 def weather_clause_query(date_clause, station_clause, args, stats_table=False):
     """
@@ -46,6 +48,15 @@ def default():
     Returns: Hello World
     """
     return "<p>Hello!</p>"
+
+@app.route('/openapi.json')
+def openapi():
+    """
+    Returns: openapi json
+    """
+    with open('openapi.json') as f:
+        d = json.load(f)
+        return d
 
 @app.route('/api/weather', methods=['GET'])
 def get_weather_data():
