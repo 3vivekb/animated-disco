@@ -32,7 +32,7 @@ Here is a sample query:
 
 ```http://127.0.0.1:5000/api/weather?station=USC00257715&page_size=10&page=3```
 
-You can use the `openapi.json` spec to do more test queries.
+Using the openapi.json, Swagger UI is set up (in a semi-hacky way).  Go to the dist folder and open index.html.
 
 ## Design/Reasoning:
 
@@ -54,8 +54,7 @@ Seeing between 20-50 seconds for ingestion and processing:
 
 <img width="679" alt="image" src="https://github.com/3vivekb/animated-disco/assets/4524205/62813a20-e949-4217-9440-2a679a95c0cc">
 
+Notes:
 
-
-
-
+The openapi.json file was created using https://app.apigit.com/
 
